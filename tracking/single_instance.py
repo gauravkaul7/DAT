@@ -1,11 +1,6 @@
 import numpy as np
 import csv
-import cv2
 
-import matplotlib.pyplot as plt
-import random
-
-import torch, torchvision
 
 import detectron2
 from detectron2.engine import DefaultPredictor
@@ -15,6 +10,9 @@ from detectron2 import model_zoo
 from filterpy.kalman import UnscentedKalmanFilter
 from filterpy.kalman.sigma_points import MerweScaledSigmaPoints
 import filterpy
+
+import cv2
+
 
 from tqdm import tqdm
 
@@ -128,7 +126,9 @@ class SingleInstanceTracker:
         return object_centerpoints
 
     def track_object_offline(self, video_path, num_frames):
+
         detections = self.get_detections_video(video_path, num_frames)
+        
         self.kf.x = np.array(
             [-1.0, detections[0][0], -1.0, detections[0][1]]
         )  # initial state
