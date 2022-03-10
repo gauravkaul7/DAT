@@ -1,7 +1,6 @@
 import numpy as np
 import csv
 
-
 import detectron2
 from detectron2.engine import DefaultPredictor
 from detectron2.config import get_cfg
@@ -12,9 +11,8 @@ from filterpy.kalman.sigma_points import MerweScaledSigmaPoints
 import filterpy
 
 import cv2
-
-
 from tqdm import tqdm
+import argparse
 
 pretrained_weights = {
     "mask_50": "COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_1x.yaml",
@@ -26,31 +24,6 @@ pretrained_weights = {
 }
 
 
-class Detector:
-    """
-    this class loads the weights of a faster rcnn with selected branches(keypoint,mask,etc.)
-    branch: either "mask", "keypoint", or "none"
-    """
-
-    def __init__(self, model_type: str, weights_path: str):
-
-        self.cfg = get_cfg()
-        self.cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1
-        self.cfg.merge_from_file(
-            model_zoo.get_config_file(pretrained_weights[model_type])
-        )
-        self.cfg.MODEL.WEIGHTS = weights_path
-        self.cfg.TEST.DETECTIONS_PER_IMAGE = 1
-        self.cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
-        self.cfg.DATALOADER.NUM_WORKERS = 2
-        self.predictor = DefaultPredictor(self.cfg)
-
-        print("loaded model from:", weights_path)
-
-    def get_detector(self):
-        return self.predictor
-
-
 class SingleInstanceTracker:
     """
     This class implements single object tracker. Since there is a known single object we do not need to associate object IDs,
@@ -59,7 +32,7 @@ class SingleInstanceTracker:
     """
 
     def __init__(self, model_type: str, weights_path: str):
-
+        
         self.cfg = get_cfg()
         self.cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1
         self.cfg.merge_from_file(
@@ -70,10 +43,7 @@ class SingleInstanceTracker:
         self.cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
         self.cfg.DATALOADER.NUM_WORKERS = 2
         self.detector = DefaultPredictor(self.cfg)
-
-        print("loaded detection model from:", weights_path)
-
-        print("tracker initilized")
+        
         self.dt = 0.7
 
         # create sigma points to use in the filter. This is standard for Gaussian processes
@@ -125,7 +95,7 @@ class SingleInstanceTracker:
 
         return object_centerpoints
 
-    def track_object_offline(self, video_path, num_frames):
+    def track_object_offline(self, video_path, num_frames, output_path):
 
         detections = self.get_detections_video(video_path, num_frames)
         
@@ -141,9 +111,10 @@ class SingleInstanceTracker:
         trajectory_filtered = [
             [i, x[0], x[1]] for i, x in enumerate(trajectory_filtered)
         ]
+        
         trajectory_filtered = [["frame id", "x", "y"]] + trajectory_filtered
 
-        with open("trajectory_output.csv", "w", newline="") as f:
+        with open(output_path+".csv", "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerows(trajectory_filtered)
 
@@ -159,3 +130,34 @@ class SingleInstanceTracker:
 
     def hx(self, x):
         return np.array([x[0], x[2]])
+
+
+if __name__ == "__main__":
+    
+    parser = argparse.ArgumentParser(description="Description of your program")
+    
+    parser.add_argument(
+    "-v", "--video", help="video path", required=True
+    )
+    
+    parser.add_argument(
+    "-o", "--output_path", help="video path", required=True
+    )
+    
+    parser.add_argument(
+    "-m", "--model_path", help="video path", required=True
+    ) 
+    
+    parser.add_argument(
+    "-t", "--model_type", help="video path", required=True
+    )
+    
+    args = vars(parser.parse_args())
+
+    video_path = args["video"]
+    output_path = args["output_path"]
+    model_type = args["model_type"]
+    weights_path = args["model_path"]
+    
+    tracker = SingleInstanceTracker(model_type, weights_path)
+    tracker.track_object_offline(video_path, -1, output_path)

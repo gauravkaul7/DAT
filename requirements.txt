@@ -1,6 +1,8 @@
 numpy>=1.17
 pyyaml==5.1
 filterpy
+opencv-python
+argparse
 # Torch
 --find-links https://download.pytorch.org/whl/torch_stable.html
 torch==1.8.0+cu101
