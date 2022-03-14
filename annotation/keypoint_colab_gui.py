@@ -335,8 +335,8 @@ def draw_bbox(image_urls, callbackId):  # pylint: disable=invalid-name
                     ctx.strokeStyle = "red";
                     ctx.lineWidth = 2;
                     ctx.beginPath(o);
-                    ctx.rect(o.x * image.width, o.y * image.height, o.w * image.width, o.h * image.height);
-                    ctx.arc(o.x * image.width, o.y * image.height, 25, 0, 2 * Math.PI);
+                    // ctx.rect(o.x * image.width, o.y * image.height, o.w * image.width, o.h * image.height);
+                    ctx.arc(o.x * image.width, o.y * image.height, 3, 0, 2 * Math.PI);
                     ctx.stroke();
                 }
 
