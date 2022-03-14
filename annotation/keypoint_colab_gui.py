@@ -249,11 +249,6 @@ def draw_bbox(image_urls, callbackId):  # pylint: disable=invalid-name
                       crosshair_v.style.left = e.pageX + "px";
                     }
 
-                    // move the bounding box
-                    if(isDrawing){
-                      m = oMousePos(canvas_img, e);
-                      draw();
-                    }
                 }
 
                 function handleMouseUp(e) {
