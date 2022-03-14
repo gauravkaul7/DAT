@@ -333,8 +333,10 @@ def draw_bbox(image_urls, callbackId):  # pylint: disable=invalid-name
                 function drawRect(o){
                     // draw a predefined rectangle
                     ctx.strokeStyle = "green";
+                    ctx.lineWidth = 2;
                     ctx.beginPath(o);
-                    ctx.fillRect(o.x * image.width, o.y * image.height,2,2);
+                    ctx.rect(o.x * image.width, o.y * image.height, o.w * image.width, o.h * image.height);
+                    ctx..arc(o.x * image.width, o.y * image.height, 5, 0, 2 * Math.PI)
                     ctx.stroke();
                 }
 
