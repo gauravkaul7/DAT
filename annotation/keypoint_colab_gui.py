@@ -223,6 +223,8 @@ def draw_bbox(image_urls, callbackId):  # pylint: disable=invalid-name
                 // the actual rectangle, the one that is being drawn
                 let o = {};
 
+                // a variable to store the mouse position
+                let m = {},
 
                 // a variable to store the point where you begin to draw the
                 // rectangle
@@ -246,17 +248,37 @@ def draw_bbox(image_urls, callbackId):  # pylint: disable=invalid-name
                       crosshair_h.style.top = e.pageY + "px";
                       crosshair_v.style.left = e.pageX + "px";
                     }
+
+                    // move the bounding box
+                    if(isDrawing){
+                      m = oMousePos(canvas_img, e);
+                      draw();
+                    }
                 }
 
                 function handleMouseUp(e) {
                     if (isDrawing) {
                         // on mouse release, push a bounding box to array and draw all boxes
                         isDrawing = false;
+
                         const box = Object.create(annotation);
-                        box.x = o.x 
-                        box.y = o.y
-                        box.w = .01;
-                        box.h =  .01;
+
+                        // calculate the position of the rectangle
+                        if (o.w > 0){
+                          box.x = o.x;
+                        }
+                        else{
+                          box.x = o.x + o.w;
+                        }
+                        if (o.h > 0){
+                          box.y = o.y;
+                        }
+                        else{
+                          box.y = o.y + o.h;
+                        }
+                        box.w = Math.abs(o.w);
+                        box.h = Math.abs(o.h);
+
                         // add the bounding box to the image
                         boundingBoxes.push(box);
                         draw();
@@ -266,8 +288,8 @@ def draw_bbox(image_urls, callbackId):  # pylint: disable=invalid-name
                 function draw() {
                     o.x = (start.x)/image.width;  // start position of x
                     o.y = (start.y)/image.height;  // start position of y
-                    o.w = .01;  // width
-                    o.h = .01;  // height
+                    o.w = (m.x - start.x)/image.width;  // width
+                    o.h = (m.y - start.y)/image.height;  // height
 
                     ctx.clearRect(0, 0, canvas_img.width, canvas_img.height);
                     ctx.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 0, 0,  canvas_img.width,  canvas_img.height);
@@ -310,9 +332,10 @@ def draw_bbox(image_urls, callbackId):  # pylint: disable=invalid-name
 
                 function drawRect(o){
                     // draw a predefined rectangle
-                    ctx.strokeStyle = "green";
+                    ctx.strokeStyle = "red";
+                    ctx.lineWidth = 2;
                     ctx.beginPath(o);
-                    ctx.fillRect(o.x * image.width, o.y * image.height, 2,2);
+                    ctx.fillRect(o.x * image.width, o.y * image.height,2,2);
                     ctx.stroke();
                 }
 
