@@ -246,20 +246,11 @@ def draw_bbox(image_urls, callbackId):  # pylint: disable=invalid-name
                   const box = Object.create(annotation);
 
                   // calculate the position of the rectangle
-                  if (o.w > 0){
-                    box.x = o.x;
-                  }
-                  else{
-                    box.x = o.x + o.w;
-                  }
-                  if (o.h > 0){
-                    box.y = o.y;
-                  }
-                  else{
-                    box.y = o.y + o.h;
-                  }
-                  box.w = Math.abs(o.w);
-                  box.h = Math.abs(o.h);
+                  box.x = o.x
+                  box.y = o.y
+
+                  box.w = 1;
+                  box.h = 1;
 
                   // add the bounding box to the image
                   boundingBoxes.push(box);
@@ -276,37 +267,7 @@ def draw_bbox(image_urls, callbackId):  # pylint: disable=invalid-name
 
                 }
 
-                function handleMouseUp(e) {
-                    if (isDrawing) {
-                        // on mouse release, push a bounding box to array and draw all boxes
-                        isDrawing = false;
-
-                        const box = Object.create(annotation);
-
-                        // calculate the position of the rectangle
-                        if (o.w > 0){
-                          box.x = o.x;
-                        }
-                        else{
-                          box.x = o.x + o.w;
-                        }
-                        if (o.h > 0){
-                          box.y = o.y;
-                        }
-                        else{
-                          box.y = o.y + o.h;
-                        }
-                        box.w = Math.abs(o.w);
-                        box.h = Math.abs(o.h);
-
-                        // add the bounding box to the image
-                        boundingBoxes.push(box);
-                        draw();
-                    }
-                }
-
                 function draw() {
-
                     ctx.clearRect(0, 0, canvas_img.width, canvas_img.height);
                     ctx.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 0, 0,  canvas_img.width,  canvas_img.height);
                     // draw all the rectangles saved in the rectsRy
