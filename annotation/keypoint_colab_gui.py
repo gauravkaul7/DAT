@@ -286,17 +286,17 @@ def draw_bbox(image_urls, callbackId):  # pylint: disable=invalid-name
                 }
 
                 function draw() {
-                    o.x = (start.x)/image.width;  // start position of x
-                    o.y = (start.y)/image.height;  // start position of y
-                    o.w = (m.x - start.x)/image.width;  // width
-                    o.h = (m.y - start.y)/image.height;  // height
+                    // o.x = (start.x)/image.width;  // start position of x
+                    // o.y = (start.y)/image.height;  // start position of y
+                    // o.w = (m.x - start.x)/image.width;  // width
+                    // o.h = (m.y - start.y)/image.height;  // height
 
                     ctx.clearRect(0, 0, canvas_img.width, canvas_img.height);
                     ctx.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 0, 0,  canvas_img.width,  canvas_img.height);
                     // draw all the rectangles saved in the rectsRy
                     boundingBoxes.map(r => {drawRect(r)});
                     // draw the actual rectangle
-                    drawRect(o);
+                    // drawRect(o);
                 }
 
                 // add the handlers needed for dragging
