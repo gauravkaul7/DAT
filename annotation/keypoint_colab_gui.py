@@ -325,7 +325,6 @@ def draw_bbox(image_urls, callbackId):  # pylint: disable=invalid-name
                     };
                 }
 
-
                 //configure colab output display
                 google.colab.output.setIframeHeight(document.documentElement.scrollHeight, true);
 
