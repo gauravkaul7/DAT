@@ -6,19 +6,19 @@ import argparse
 parser = argparse.ArgumentParser(description="Description of your program")
 
 parser.add_argument(
-"-m", "--model_path", help="video path", required=True
+"-m", "--model_path", help="path to a model - this will be a .pth file", required=True
 ) 
 
 parser.add_argument(
-"-t", "--model_type", help="video path", required=True
+"-t", "--model_type", help="what kind of model is being used", required=True
 )
 
 parser.add_argument(
-"-p", "--partition", help="video path", required=True
+"-p", "--partition", help="name of an accesable slurm partition", required=True
 )
 
 parser.add_argument(
-"-a", "--account", help="video path", required=True
+"-a", "--account", help="name of a slurm account", required=True
 )
 
 args = vars(parser.parse_args())
@@ -39,11 +39,11 @@ for video in videos:
 #SBATCH --time=48:00:00
 #SBATCH --mem=40GB
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/kaulg/miniconda3/lib/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:{fill in your path to conda lib folder}
 
-export PATH=/home/kaulg/miniconda3/envs/deepAnimalToolkit/bin:$PATH
+export PATH={fill in your path to conda bin folder}:$PATH
 
-cd /scratch/justincj_root/justincj/kaulg/deep-animal-toolkit 
+cd {fill in your path to this directory path/ending/in/DAT}
 
 python tracking/single_instance.py -v hpc/videos_to_track/{video} -o hpc/output/{output} -t {model_type} -m {model}
 

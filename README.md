@@ -10,15 +10,16 @@ Then, Clone the repository, create a conda environment and install all dependenc
 
 ```bash
 
-git clone https://github.com/gauravkaul7/DeepAnimalToolkit.git
-conda create -n deepAnimalToolit python=3.9
-conda activate deepAnimalToolit
+git clone https://github.com/gauravkaul7/DAT
+conda create -n DAT python=3.9
+conda activate DAT
 python -m pip install -r requirements.txt
 
 ```
+### High Preformance Single Animal Tracking
 
 Once you have setup the codebase on your computing cluster we will add all of the 
-videos you want to analyze to the ``/hpc/videos_to_analyze`` directory. we will then require the following to run our analysis*: 
+videos you want to analyze to the ``/hpc/videos_to_analyze`` directory. we will then require the following to run our analysis: 
 
 1. A Detection model (a .pth file)
 2. The Detection model type (either detection/mask/keypoint)
@@ -29,10 +30,9 @@ once we have everything we can run the following command with your values filled
 
 ```bash
 
-python hpc/launch_tracking.py \
+python hpc/launch_sinlge_instance_tracking.py \
     --model-file {your .pth file}
     --model-type {type of model}
-    --user {type of model}
     --account {your Slurm Account name}
     --partition {type of model}
 
@@ -40,6 +40,7 @@ python hpc/launch_tracking.py \
   
 
 ## Dataset format (for modules that require training data)
+
 
 ### Detection Models (Models that predict bounding boxes, Segmentation Masks, and Keypoints/Pose)
 
@@ -65,4 +66,3 @@ data/datasets/
             ├── image_N.json
             └── ...
 ```
-if youre using our system in a Google Colab Notebook
